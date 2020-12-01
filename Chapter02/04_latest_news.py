@@ -14,7 +14,7 @@ soup = BeautifulSoup(res.content, 'html.parser')
 title = soup.find("div", {"id":"news_title02"}).text
 contents = soup.find("div", {"id":"news_content"}).text
 date = soup.find("div", {"id":"news_util01"}).text.strip()
-photos = soup.find_all("div", {"clas":"news_image"})
+photos = soup.find_all("div", {"class":"news_image"})
 
 print(title)
 print(contents)
