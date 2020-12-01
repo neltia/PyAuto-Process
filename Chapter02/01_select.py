@@ -6,5 +6,5 @@ res = requests.get(url)
 soup = BeautifulSoup(res.content, 'html.parser')
 
 # id가 NM_FAVORITE인 정보를 선택
-data = soup.select('#NM_FAVORITE') # div.gnb_inner
+data = soup.select_one('#NM_FAVORITE') # div.gnb_inner
 print(data)
