@@ -1,7 +1,5 @@
 # Crawling Library
 import requests
-import pandas as pd
-import datetime
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
@@ -33,38 +31,27 @@ news_list = soup.find_all("div", {"class":"news_list"})
 url_list = [index.find('a').get('href').split('&')[0] for index in news_list]
 
 # getting news data
-date = []
-title = []
-contents = []
-photos = []
-summary = []
+result = []
 
 for index in url_list:
+  data = dict()
   url = main_url + index
   res = requests.get(url, headers=headers)
   soup = BeautifulSoup(res.content, 'html.parser')
 
-  title.append(soup.find("div", {"id":"news_title02"}).text)
-  contents.append(soup.find("div", {"id":"news_content"}).text.strip())
-  date.append(soup.find("div", {"id":"news_util01"}).text.strip())
-  photos.append(soup.find_all("div", {"class":"news_image"}))
+  data["url"] = index
+  data["title"] = soup.find("div", {"id":"news_title02"}).text
+  data["content"] = soup.find("div", {"id":"news_content"}).text.strip()
+  data["date"] = clean_date(soup.find("div", {"id":"news_util01"}).text.strip())
+  data["photos"] = get_src(soup.find_all("div", {"class":"news_image"}))
 
   txt = soup.find("mark")
   if txt == None:
-    result = ""  
+    chk = ""  
   else:
-    result = txt.text[txt.find("1."):]
-  summary.append(result)
+    chk = txt.text[txt.find("1."):]
+  data["summary"] = chk
+  
+  result.append(data)
 
-# preprocess
-df_data = {}
-df_data["url"] = url_list
-df_data["date"] = date
-df_data["title"] = title
-df_data["contents"] = contents
-df_data["summary"] = summary
-df_data["photos"] = photos
-df = pd.DataFrame(df_data)
-
-df["date"] = [clean_date(data) for data in df["date"]]
-df["photos"] = [get_src(data) for data in df["photos"]]
+print(result)
