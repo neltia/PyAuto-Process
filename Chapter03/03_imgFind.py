@@ -21,8 +21,8 @@ for img in images:
 		cnt += 1
 		print(f"Index: {cnt}, 이미지 주소: {imgUrl}")
 	except Exception as e:
-		print("Index: Passed")
+		print(f"Index: {cnt}, Passed")
 		pass
 
-# driver.close()
+driver.close()
 print("\nTotal CNT:", cnt)
